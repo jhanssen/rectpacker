@@ -98,10 +98,10 @@ RectPacker::Node* RectPacker::insertSize(Node* node, int w, int h)
     }
 #ifdef PACK_DEBUG
     printf("created nodes %d,%d+%dx%d, %d,%d+%dx%d (wanting %dx%d)\n",
-           node->child[0]->rect.x, node->child[0]->rect.y,
-           node->child[0]->rect.width(), node->child[0]->rect.height(),
-           node->child[1]->rect.x, node->child[1]->rect.y,
-           node->child[1]->rect.width(), node->child[1]->rect.height(),
+           node->nodes[0]->rect.x, node->nodes[0]->rect.y,
+           node->nodes[0]->rect.width(), node->nodes[0]->rect.height(),
+           node->nodes[1]->rect.x, node->nodes[1]->rect.y,
+           node->nodes[1]->rect.width(), node->nodes[1]->rect.height(),
            w, h);
 #endif
     return insertSize(node->nodes[0], w, h);
