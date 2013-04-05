@@ -78,9 +78,11 @@ bool RectPacker::insertSize(Node* node, int w, int h, Rect& r)
     return insertSize(node->child[0], w, h, r);
 }
 
-Rect RectPacker::insert(int w, int h)
+Rect RectPacker::insert(int w, int h, bool* ok)
 {
     Rect r;
-    insertSize(root, w, h, r);
+    const bool inserted = insertSize(root, w, h, r);
+    if (ok)
+        *ok = inserted;
     return r;
 }

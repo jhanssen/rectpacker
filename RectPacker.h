@@ -19,7 +19,7 @@ public:
     RectPacker(int w, int h);
     ~RectPacker();
 
-    Rect insert(int w, int h);
+    Rect insert(int w, int h, bool* ok = 0);
 
 private:
     struct Node
