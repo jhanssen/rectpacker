@@ -41,17 +41,17 @@ private:
         enum { RectCount = 600,
                MinWidth = 10, MaxWidth = 50,
                MinHeight = 20, MaxHeight = 80 };
-        bool ok;
         for (int i = 0; i < RectCount; ++i) {
             const int w = std::max<int>(random() % MaxWidth, MinWidth);
             const int h = std::max<int>(random() % MaxHeight, MinHeight);
-            Rect r = pack.insert(w, h, &ok);
-            if (!ok) {
+            RectPacker::Node* node = pack.insert(w, h);
+            if (!node) {
                 qWarning("Unable to fit size %dx%d", w, h);
                 return;
             }
-            assert(r.width() == w && r.height() == h);
-            rects.push_back(r);
+            assert(node->rect.width() == w && node->rect.height() == h);
+            node->userData = reinterpret_cast<void*>(0x1);
+            rects.push_back(node->rect);
         }
     }
 

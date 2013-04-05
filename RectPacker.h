@@ -1,6 +1,8 @@
 #ifndef RECTPACKER_H
 #define RECTPACKER_H
 
+#include <string.h>
+
 struct Rect
 {
     Rect() : x(0), y(0), right(0), bottom(0) { }
@@ -20,20 +22,22 @@ public:
     RectPacker(int w, int h);
     ~RectPacker();
 
-    void init(int w, int h);
-
-    Rect insert(int w, int h, bool* ok = 0);
-
-private:
     struct Node
     {
-        Node* child[2];
+        Node(Node* parent = 0) { memset(this, 0, sizeof(Node)); child[2] = parent; }
+
+        Node* child[3];
         Rect rect;
-        bool taken;
+        void* userData;
     };
 
+    void init(int w, int h);
+
+    Node* insert(int w, int h);
+
+private:
     void deleteNode(Node* node);
-    bool insertSize(Node* node, int w, int h, Rect& r);
+    Node* insertSize(Node* node, int w, int h);
 
     Node* root;
 };
