@@ -24,9 +24,11 @@ public:
 
     struct Node
     {
-        Node(Node* parent = 0) { memset(this, 0, sizeof(Node)); child[2] = parent; }
+        Node(Node* parent = 0) { memset(this, 0, sizeof(Node)); nodes[2] = parent; }
 
-        Node* child[3];
+        inline Node* parent() { return nodes[2]; }
+
+        Node* nodes[3];
         Rect rect;
         void* userData;
     };
@@ -34,6 +36,7 @@ public:
     void init(int w, int h);
 
     Node* insert(int w, int h);
+    void clear(Node* node);
 
 private:
     void deleteNode(Node* node);

@@ -34,11 +34,23 @@ void RectPacker::init(int w, int h)
 
 void RectPacker::deleteNode(Node* node)
 {
-    if (node->child[0])
-        deleteNode(node->child[0]);
-    if (node->child[1])
-        deleteNode(node->child[1]);
+    if (node->nodes[0]) {
+        assert(node->nodes[1]);
+        deleteNode(node->nodes[0]);
+        deleteNode(node->nodes[1]);
+    }
     delete node;
+}
+
+void RectPacker::clear(Node* node)
+{
+    if (node->nodes[0]) {
+        assert(node->nodes[1]);
+        deleteNode(node->nodes[0]);
+        node->nodes[0] = 0;
+        deleteNode(node->nodes[1]);
+        node->nodes[1] = 0;
+    }
 }
 
 RectPacker::Node* RectPacker::insertSize(Node* node, int w, int h)
@@ -48,21 +60,20 @@ RectPacker::Node* RectPacker::insertSize(Node* node, int w, int h)
            node->rect.x, node->rect.y,
            node->rect.width(), node->rect.height());
 #endif
-    if (node->child[0]) {
-        assert(node->child[1]);
-        if (Node* inserted = insertSize(node->child[0], w, h))
+    if (node->nodes[0]) {
+        assert(node->nodes[1]);
+        if (Node* inserted = insertSize(node->nodes[0], w, h))
             return inserted;
-        return insertSize(node->child[1], w, h);
+        return insertSize(node->nodes[1], w, h);
     }
     if (node->userData)
         return 0;
     if (node->rect.width() < w || node->rect.height() < h)
         return 0;
-    if (w == node->rect.width() && h == node->rect.height()) {
+    if (w == node->rect.width() && h == node->rect.height())
         return node;
-    }
-    node->child[0] = new Node(node);
-    node->child[1] = new Node(node);
+    node->nodes[0] = new Node(node);
+    node->nodes[1] = new Node(node);
 
     int dw = node->rect.width() - w;
     int dh = node->rect.height() - h;
@@ -71,17 +82,17 @@ RectPacker::Node* RectPacker::insertSize(Node* node, int w, int h)
 #ifdef PACK_DEBUG
         printf("left\n");
 #endif
-        node->child[0]->rect = Rect(node->rect.x, node->rect.y,
+        node->nodes[0]->rect = Rect(node->rect.x, node->rect.y,
                                     node->rect.x + w - 1, node->rect.bottom);
-        node->child[1]->rect = Rect(node->rect.x + w, node->rect.y,
+        node->nodes[1]->rect = Rect(node->rect.x + w, node->rect.y,
                                     node->rect.right, node->rect.bottom);
     } else {
 #ifdef PACK_DEBUG
         printf("right\n");
 #endif
-        node->child[0]->rect = Rect(node->rect.x, node->rect.y,
+        node->nodes[0]->rect = Rect(node->rect.x, node->rect.y,
                                     node->rect.right, node->rect.y + h - 1);
-        node->child[1]->rect = Rect(node->rect.x, node->rect.y + h,
+        node->nodes[1]->rect = Rect(node->rect.x, node->rect.y + h,
                                     node->rect.right, node->rect.bottom);
     }
 #ifdef PACK_DEBUG
@@ -92,7 +103,7 @@ RectPacker::Node* RectPacker::insertSize(Node* node, int w, int h)
            node->child[1]->rect.width(), node->child[1]->rect.height(),
            w, h);
 #endif
-    return insertSize(node->child[0], w, h);
+    return insertSize(node->nodes[0], w, h);
 }
 
 RectPacker::Node* RectPacker::insert(int w, int h)
