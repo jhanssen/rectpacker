@@ -38,11 +38,13 @@ private:
     void randomize()
     {
         srandom(time(0));
-        enum { RectCount = 600 };
+        enum { RectCount = 600,
+               MinWidth = 10, MaxWidth = 50,
+               MinHeight = 20, MaxHeight = 80 };
         bool ok;
         for (int i = 0; i < RectCount; ++i) {
-            const int w = std::max<int>(random() % 50, 10);
-            const int h = std::max<int>(random() % 80, 20);
+            const int w = std::max<int>(random() % MaxWidth, MinWidth);
+            const int h = std::max<int>(random() % MaxHeight, MinHeight);
             Rect r = pack.insert(w, h, &ok);
             if (!ok) {
                 qWarning("Unable to fit size %dx%d", w, h);
