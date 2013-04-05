@@ -1,6 +1,7 @@
 #include "RectPacker.h"
 #include <QtGui>
 #include <vector>
+#include <assert.h>
 
 class Visualizer : public QWidget
 {
@@ -37,11 +38,17 @@ private:
     void randomize()
     {
         srandom(time(0));
-        enum { RectCount = 800 };
+        enum { RectCount = 600 };
+        bool ok;
         for (int i = 0; i < RectCount; ++i) {
-            const int w = random() % 50;
-            const int h = random() % 80;
-            Rect r = pack.insert(w, h);
+            const int w = std::max<int>(random() % 50, 10);
+            const int h = std::max<int>(random() % 80, 20);
+            Rect r = pack.insert(w, h, &ok);
+            if (!ok) {
+                qWarning("Unable to fit size %dx%d", w, h);
+                return;
+            }
+            assert(r.width() == w && r.height() == h);
             rects.push_back(r);
         }
     }
