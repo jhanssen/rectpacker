@@ -16,24 +16,16 @@ public:
 protected:
     void paintEvent(QPaintEvent*)
     {
-        static const char* colors[] = {
-            "red",
-            "green",
-            "blue",
-            "black",
-            "yellow",
-            "cyan"
-            "magenta",
-            0
-        };
+        const QStringList colors = QColor::colorNames();
+        const QStringList::const_iterator colorEnd = colors.end();
+        QStringList::const_iterator color = colors.begin();
 
         QPainter p(this);
-        const char** color = colors;
         std::vector<Rect>::const_iterator rect = rects.begin();
         const std::vector<Rect>::const_iterator end = rects.end();
         while (rect != end) {
-            if (*color == 0)
-                color = colors;
+            if (color == colorEnd)
+                color = colors.begin();
             qDebug() << "filling" << rect->x << rect->y << rect->width() << rect->height();
             p.fillRect(rect->x, rect->y, rect->width(), rect->height(), QColor(*color));
             ++color;
