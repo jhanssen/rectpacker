@@ -51,6 +51,7 @@ void RectPacker::clear(Node* node)
         deleteNode(node->nodes[1]);
         node->nodes[1] = 0;
     }
+    node->userData = 0;
 }
 
 RectPacker::Node* RectPacker::insertSize(Node* node, int w, int h)
