@@ -16,8 +16,11 @@ struct Rect
 class RectPacker
 {
 public:
+    RectPacker();
     RectPacker(int w, int h);
     ~RectPacker();
+
+    void init(int w, int h);
 
     Rect insert(int w, int h, bool* ok = 0);
 

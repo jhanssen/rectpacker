@@ -4,17 +4,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-RectPacker::RectPacker(int w, int h)
-    : root(new Node)
+RectPacker::RectPacker()
+    : root(0)
 {
-    memset(root, 0, sizeof(Node));
-    root->rect.right = w - 1;
-    root->rect.bottom = h - 1;
+}
+
+RectPacker::RectPacker(int w, int h)
+    : root(0)
+{
+    init(w, h);
 }
 
 RectPacker::~RectPacker()
 {
-    deleteNode(root);
+    if (root)
+        deleteNode(root);
+}
+
+void RectPacker::init(int w, int h)
+{
+    if (root)
+        deleteNode(root);
+    root = new Node;
+    memset(root, 0, sizeof(Node));
+    root->rect.right = w - 1;
+    root->rect.bottom = h - 1;
 }
 
 void RectPacker::deleteNode(Node* node)
